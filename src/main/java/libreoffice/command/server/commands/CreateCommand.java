@@ -1,5 +1,6 @@
 package libreoffice.command.server.commands;
 
+import libreoffice.XComponentVariable;
 import libreoffice.command.server.State;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,6 +37,6 @@ public class CreateCommand extends Command {
             ret = state.getName("$component");
         }
 
-        state.assign(ret, xComponent);
+        state.assign(ret, new XComponentVariable(xComponent));
     }
 }

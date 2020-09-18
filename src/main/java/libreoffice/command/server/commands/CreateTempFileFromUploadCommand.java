@@ -11,6 +11,7 @@ import javax.servlet.http.Part;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 
+import libreoffice.PathVariable;
 import libreoffice.command.server.State;
 
 public class CreateTempFileFromUploadCommand extends Command {
@@ -39,7 +40,7 @@ public class CreateTempFileFromUploadCommand extends Command {
             ret = state.getName("$temp");
         }
 
-        state.assign(ret, temp);
+        state.assign(ret, new PathVariable(temp));
     }
 
     public static String findExtension(String fileName) {

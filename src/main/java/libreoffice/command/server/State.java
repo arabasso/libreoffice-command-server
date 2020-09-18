@@ -1,15 +1,23 @@
 package libreoffice.command.server;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.NavigableSet;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 
 import com.sun.star.uno.XComponentContext;
 
+import libreoffice.Variable;
 import libreoffice.command.server.commands.Command;
 import spark.Request;
 import spark.Response;
@@ -23,8 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.star.frame.XComponentLoader;
 import com.sun.star.frame.XDispatchHelper;
 
-public class State {
-    private final HashMap<String, Object> variables = new HashMap<String, Object>();
+public class State implements Closeable {
+    private final Map<String, Variable> variables = new HashMap<String, Variable>();
     private final XComponentContext xContext;
     private final XMultiComponentFactory xMultiComponentFactory;
     private final XDesktop xDesktop;
@@ -86,12 +94,16 @@ public class State {
     }
 
     public void assign(final String name, final Object value) {
-        this.variables.put(name, value);
+        this.variables.put(name, new Variable(value));
+    }
+
+    public void assign(final String name, final Variable variable) {
+        this.variables.put(name, variable);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T get(final String name) {
-        return (T)this.variables.get(name);
+        return (T)this.variables.get(name).getValue();
     }
 
     private final HashMap<String, Integer> names = new HashMap<String, Integer>();
@@ -106,5 +118,16 @@ public class State {
         names.merge(prefix, 1, Integer::sum);
 
         return name;
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.variables.keySet().stream().map(this.variables::get).forEach(v ->{
+            try {
+                v.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -35,6 +35,8 @@ public class App
                 command.execute(state);
             }
 
+            state.close();
+
             return response;
         });
 

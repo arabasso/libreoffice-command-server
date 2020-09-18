@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 
+import libreoffice.PathVariable;
 import libreoffice.command.server.State;
 
 public class CreateTempFileCommand extends Command {
@@ -22,6 +23,6 @@ public class CreateTempFileCommand extends Command {
             ret = state.getName("$temp");
         }
 
-        state.assign(ret, temp);
+        state.assign(ret, new PathVariable(temp));
     }
 }
