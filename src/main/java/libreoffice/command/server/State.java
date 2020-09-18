@@ -21,6 +21,7 @@ import com.sun.star.lang.XMultiComponentFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.star.frame.XComponentLoader;
+import com.sun.star.frame.XDispatchHelper;
 
 public class State {
     private final HashMap<String, Object> variables = new HashMap<String, Object>();
@@ -28,6 +29,7 @@ public class State {
     private final XMultiComponentFactory xMultiComponentFactory;
     private final XDesktop xDesktop;
     private final XComponentLoader xComponentLoader;
+    private final XDispatchHelper dispatcher;
     private final Request request;
     private final Response response;
 
@@ -36,8 +38,9 @@ public class State {
         this.request = request;
         this.response = response;
         this.xMultiComponentFactory = xContext.getServiceManager();
-        this.xDesktop = UnoRuntime.queryInterface(XDesktop.class, this.xMultiComponentFactory.createInstanceWithContext("com.sun.star.frame.Desktop", xContext));
+        this.xDesktop = UnoRuntime.queryInterface(XDesktop.class, this.xMultiComponentFactory.createInstanceWithContext("com.sun.star.frame.Desktop", this.xContext));
         this.xComponentLoader = UnoRuntime.queryInterface(com.sun.star.frame.XComponentLoader.class, xDesktop);
+        this.dispatcher = UnoRuntime.queryInterface(XDispatchHelper.class, this.xMultiComponentFactory.createInstanceWithContext("com.sun.star.frame.DispatchHelper", xContext));
     }
 
     public XComponentContext getXContext() {
@@ -54,6 +57,10 @@ public class State {
 
     public XMultiComponentFactory getXMultiComponentFactory() {
         return this.xMultiComponentFactory;
+    }
+
+    public XDispatchHelper getDispatcher() {
+        return this.dispatcher;
     }
 
     public Response getResponse() {

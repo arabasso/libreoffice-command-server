@@ -21,6 +21,8 @@ import libreoffice.command.server.State;
     @Type(value = StoreAsURLCommand.class, name = "StoreAsURL"),
     @Type(value = StoreToURLCommand.class, name = "StoreToURL"),
     @Type(value = DownloadFileCommand.class, name = "DownloadFile"),
+    @Type(value = AddPageBreakCommand.class, name = "AddPageBreak"),
+    @Type(value = InsertDocumentFromURLCommand.class, name = "InsertDocumentFromURL"),
  })
 public abstract class Command {
     public abstract void execute(State state) throws Exception;
