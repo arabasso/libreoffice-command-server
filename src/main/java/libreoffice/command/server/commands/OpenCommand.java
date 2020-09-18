@@ -1,12 +1,10 @@
 package libreoffice.command.server.commands;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 
-import libreoffice.Variable;
 import libreoffice.XComponentVariable;
 import libreoffice.command.server.State;
 import com.sun.star.lang.XComponent;
